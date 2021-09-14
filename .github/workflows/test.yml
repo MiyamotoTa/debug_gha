@@ -21,6 +21,7 @@ jobs:
 
       - run: echo 'Test'
 
-      - run: |
+      - name: ${{matrix.dirs}}
+        run: |
           cd ${{matrix.dirs}}
           cat test.txt

@@ -28,14 +28,13 @@ jobs:
         id: get_ip_addresses
         run: |
           IP_ADDRESSES=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=GitHubActons OIDC Example*" --query "Reservations[].Instances[].PublicIpAddress" | jq -c)
-          echo $IP_ADDRESSES
-          echo "::set-output name=ip_addresses::IP_ADDRESSES"
+          echo "::set-output name=ip_addresses::${IP_ADDRESSES}"
 
   echo_ip_addresses:
     needs: get_ip_addresses
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     ip_addresses: ${{ fromJson(needs.get_ip_addresses.outputs.ip_addresses) }}
+    strategy:
+      matrix:
+        ip_addresses: ${{ fromJson(needs.get_ip_addresses.outputs.ip_addresses) }}
     steps:
-      - run: echo ${{needs.get_ip_addresses.outputs.ip_addresses}}
+      - run: echo ${{ matrix.ip_addresses }}

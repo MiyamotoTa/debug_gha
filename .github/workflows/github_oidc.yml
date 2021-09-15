@@ -2,8 +2,10 @@ name: GitHubActions OpenIDConnect Example
 on: [push, workflow_dispatch]
 
 jobs:
-  build:
+  get_ip_addresses:
     runs-on: ubuntu-latest
+    outputs:
+      ip_addresses: ${{steps.get_ip_addresses.outputs.ip_addresses}}
     permissions:
       id-token: write
       contents: read
@@ -22,4 +24,17 @@ jobs:
 
           curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sigstore" | jq -r '.value' > $AWS_WEB_IDENTITY_TOKEN_FILE
 
-      - run: aws ec2 describe-instances --filters "Name=tag:Name,Values=GitHubActons OIDC Example*"
+      - name: Get IP addresses
+        id: get_ip_addresses
+        run: |
+        IP_ADDRESSES=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=GitHubActons OIDC Example*" --query "Reservations[].Instances[].PublicIpAddress" | jq -c)
+        echo "::set-output name=ip_addresses::IP_ADDRESSES"
+
+  echo_ip_addresses:
+    needs: get_ip_addresses
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ip_addresses: ${{fromJson(needs.get_ip_addresses.outputs.ip_addresses)}}
+    steps:
+      - run: ${{matrix.ip_addresses}}

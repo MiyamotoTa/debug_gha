@@ -27,8 +27,8 @@ jobs:
       - name: Get IP addresses
         id: get_ip_addresses
         run: |
-        IP_ADDRESSES=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=GitHubActons OIDC Example*" --query "Reservations[].Instances[].PublicIpAddress" | jq -c)
-        echo "::set-output name=ip_addresses::IP_ADDRESSES"
+          IP_ADDRESSES=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=GitHubActons OIDC Example*" --query "Reservations[].Instances[].PublicIpAddress" | jq -c)
+          echo "::set-output name=ip_addresses::IP_ADDRESSES"
 
   echo_ip_addresses:
     needs: get_ip_addresses

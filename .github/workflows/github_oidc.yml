@@ -34,8 +34,8 @@ jobs:
   echo_ip_addresses:
     needs: get_ip_addresses
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ip_addresses: ${{ fromJson(needs.get_ip_addresses.outputs.ip_addresses) }}
+    # strategy:
+    #   matrix:
+    #     ip_addresses: ${{ fromJson(needs.get_ip_addresses.outputs.ip_addresses) }}
     steps:
-      - run: ${{matrix.ip_addresses}}
+      - run: echo ${{needs.get_ip_addresses.outputs.ip_addresses}}

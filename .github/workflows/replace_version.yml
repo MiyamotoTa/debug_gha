@@ -1,0 +1,32 @@
+name: Replace version
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  replace-version-string:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v2
+      - name: Extract version from release branch to env var
+        env:
+          FULL_BRANCH_NAME: ${{ github.ref }}
+        run: |
+          BRANCH_VERSION_PART="${FULL_BRANCH_NAME##*/}"
+          echo "VERSION_BRANCH=$BRANCH_VERSION_PART" >> $GITHUB_ENV
+      - name: Replace file
+        run: |
+          VERSION_BRANCH_STRIP_V="${VERSION_BRANCH:1}"
+          sed -i -E "s/(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/$VERSION_BRANCH_STRIP_V/" test_1/version.txt
+      - name: Commit and push
+        run: |
+          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          if (git diff --shortstat | grep '[0-9]'); then \
+            git add .; \
+            git commit -m "Replace version string"; \
+            git push origin HEAD:${GITHUB_REF}; \
+          fi

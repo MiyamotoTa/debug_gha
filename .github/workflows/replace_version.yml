@@ -30,3 +30,31 @@ jobs:
             git commit -m "Replace version string"; \
             git push origin HEAD:${GITHUB_REF}; \
           fi
+
+  create-pull-request:
+    needs: replace-version-string
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+
+      - name: Setup vars
+        id: vars
+        run: |
+          echo "::set-output name=branch_name::${GITHUB_REF#refs/heads/}"
+          echo "::set-output name=branch_prefix::$(echo ${GITHUB_REF} | cut -d '/' -f 3)"
+      - name: Create a release PR
+        env:
+          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: master
+          GIT_PR_RELEASE_BRANCH_STAGING: ${{ steps.vars.outputs.branch_name }}
+          GIT_PR_RELEASE_TITLE: ${{ steps.vars.outputs.branch_name }}
+          GIT_PR_RELEASE_TEMPLATE: .git_pr_release_template
+        run: |
+          gem install -N git-pr-release -v "1.9.0"
+          git-pr-release --no-fetch

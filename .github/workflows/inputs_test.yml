@@ -2,7 +2,7 @@ name: Inputs test
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '30 5 * * *'
   workflow_dispatch:
     inputs:
       message:

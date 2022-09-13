@@ -5,7 +5,7 @@ on:
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
-      host:
+      fqdn:
         description: Specify the server to run the job. (
         required: true
         type: string
@@ -16,13 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Set the variables
+      - name: Set FQDN
+        id: set-fqdn
         env:
-          DEFAULT_HOST: 'dev4-edison.peralingo.jp'
-        run: echo "MESSAGE=${{ github.event.inputs.host || env.DEFAULT_HOST }}" >> $GITHUB_ENV
+          DEFAULT_FQDN: 'dev4-edison.peralingo.jp'
+        run: echo "::set-output name=fqdn::=${{ github.event.inputs.fqdn || env.DEFAULT_FQDN }}"
       - name: Make a request
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://$MESSAGE/score/average'
+          url: 'https://${{ steps.set-fqdn.outputs.fqdn }}/score/average'
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json", "User-Agent": "edison-github-actions"}'

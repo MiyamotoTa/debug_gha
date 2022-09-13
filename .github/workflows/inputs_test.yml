@@ -1,13 +1,15 @@
-name: Update average score
+name: Inputs test
 
 on:
+  schedule:
+    - cron: '* * * * *'
   workflow_dispatch:
     inputs:
-      host:
+      message:
         description: Specify the server to run the job. (
         required: true
         type: string
-        default: 'stg-edison.peralingo.jp'
+        default: 'Default message'
 
 jobs:
   update_average_score:
@@ -15,8 +17,4 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Request score/average to update edison-content-dev cache
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://${{ inputs.host }}/score/average'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json", "User-Agent": "edison-github-actions"}'
+        run: echo "${{ inputs.message }}"

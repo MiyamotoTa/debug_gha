@@ -20,7 +20,7 @@ jobs:
         id: set-fqdn
         env:
           DEFAULT_FQDN: 'dev4-edison.peralingo.jp'
-        run: echo "::set-output name=fqdn::=${{ github.event.inputs.fqdn || env.DEFAULT_FQDN }}"
+        run: echo "::set-output name=fqdn::${{ github.event.inputs.fqdn || env.DEFAULT_FQDN }}"
       - name: Make a request
         uses: fjogeleit/http-request-action@v1
         with:

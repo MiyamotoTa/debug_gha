@@ -5,11 +5,11 @@ on:
     - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
-      message:
+      host:
         description: Specify the server to run the job. (
         required: true
         type: string
-        default: 'Default input message'
+        default: 'stg-edison.peralingo.jp'
 
 jobs:
   update_average_score:
@@ -18,7 +18,11 @@ jobs:
     steps:
       - name: Set the variables
         env:
-          DEFAULT_MESSAGE: 'default message'
-        run: echo "MESSAGE=${{ github.event.inputs.message || env.DEFAULT_MESSAGE }}" >> $GITHUB_ENV
-      - name: Request score/average to update edison-content-dev cache
-        run: echo "$MESSAGE"
+          DEFAULT_HOST: 'dev4-edison.peralingo.jp'
+          run: echo "MESSAGE=${{ github.event.inputs.host || env.DEFAULT_HOST }}" >> $GITHUB_ENV
+      - name: Make a request
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://$MESSAGE/score/average'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json", "User-Agent": "edison-github-actions"}'

@@ -9,12 +9,16 @@ on:
         description: Specify the server to run the job. (
         required: true
         type: string
-        default: 'Default message'
+        default: 'Default input message'
 
 jobs:
   update_average_score:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Set the variables
+        env:
+          DEFAULT_MESSAGE: 'default message'
+        run: echo "MESSAGE=${{ github.event.inputs.message || env.DEFAULT_MESSAGE }}" >> $GITHUB_ENV
       - name: Request score/average to update edison-content-dev cache
-        run: echo "${{ inputs.message }}"
+        run: echo "$MESSAGE"

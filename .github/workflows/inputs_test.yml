@@ -1,0 +1,22 @@
+name: Update average score
+
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: Specify the server to run the job. (
+        required: true
+        type: string
+        default: 'stg-edison.peralingo.jp'
+
+jobs:
+  update_average_score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request score/average to update edison-content-dev cache
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://${{ inputs.host }}/score/average'
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json", "User-Agent": "edison-github-actions"}'

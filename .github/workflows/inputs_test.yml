@@ -19,7 +19,7 @@ jobs:
       - name: Set the variables
         env:
           DEFAULT_HOST: 'dev4-edison.peralingo.jp'
-          run: echo "MESSAGE=${{ github.event.inputs.host || env.DEFAULT_HOST }}" >> $GITHUB_ENV
+        run: echo "MESSAGE=${{ github.event.inputs.host || env.DEFAULT_HOST }}" >> $GITHUB_ENV
       - name: Make a request
         uses: fjogeleit/http-request-action@v1
         with:

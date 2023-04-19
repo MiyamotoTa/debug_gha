@@ -12,8 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install FFMPEG
-        run: |
+      - uses: actions/cache@v3
+        with:
+          path: /usr/bin/ffmpeg
+          key: ${{ runner.os }}-ffmpeg-
+          restore-keys: |
+            ${{ runner.os }}-ffmpeg-
+      - run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 

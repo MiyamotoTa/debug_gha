@@ -12,14 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/cache@v3
+      - name: Cache APT packages
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          path: /usr/bin/ffmpeg
-          key: ${{ runner.os }}-ffmpeg-
-          restore-keys: |
-            ${{ runner.os }}-ffmpeg-
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          packages: ffmpeg
+          version: 1.0
 
       - run: which ffmpeg

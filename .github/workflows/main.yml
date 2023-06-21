@@ -16,6 +16,7 @@ jobs:
       - name: display ids
         id: display-ids
         run: |
+          IFS=$'\t'
           for id in ${{ steps.ids.outputs.ids }}; do
             echo "id=$id++++" >> $GITHUB_OUTPUT
           done

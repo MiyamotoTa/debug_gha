@@ -15,13 +15,13 @@ jobs:
         id: ids-in-use
         run: |
           ids="id3 id4 id5 id6 id7 id8 id9 id10"
-          echo "id=$ids" >> $GITHUB_OUTPUT
+          echo "ids=$ids" >> $GITHUB_OUTPUT
 
       - name: all ids
         id: all-ids
         run: |
           ids="id1 id2 id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20"
-          echo "id=$ids" >> $GITHUB_OUTPUT
+          echo "ids=$ids" >> $GITHUB_OUTPUT
 
       - name: get IDs to delete
         id: get-ids-to-delete

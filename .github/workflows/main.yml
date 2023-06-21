@@ -20,7 +20,7 @@ jobs:
       - name: display ids
         id: display-ids
         run: |
-          ids=${{ steps.ids.outputs.ids }}
+          ids="${{ steps.ids.outputs.ids }}"
           for id in $ids; do
             echo "id=$id++++" >> $GITHUB_OUTPUT
           done

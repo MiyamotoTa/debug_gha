@@ -6,11 +6,6 @@ jobs:
   main-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Echo
-        run: echo "This is main workflow"
-
-      - uses: actions/checkout@v3
-
       - name: ids in use
         id: ids-in-use
         run: |
@@ -28,7 +23,7 @@ jobs:
         run: |
           ids=""
           for id in ${{ steps.all-ids.outputs.ids }}; do
-            if [[ ! ${{ steps.ids-in-use.outputs.ids }} =~ $id ]]; then
+            if [[ ! "${{ steps.ids-in-use.outputs.ids }}" =~ $id ]]; then
               ids+="$id "
             fi
           done

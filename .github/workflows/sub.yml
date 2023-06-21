@@ -1,0 +1,12 @@
+name: Sub workflow
+
+jobs:
+  sub-job:
+    needs: main-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display message
+        run: echo "This is a sub workflow"
+
+      - name: Display template name
+        run: echo "${{ needs.main-job.outputs.template_name }}"

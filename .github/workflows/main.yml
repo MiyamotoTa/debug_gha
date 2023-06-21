@@ -1,0 +1,19 @@
+name: Main Workflow
+
+on: workflow_dispatch
+
+jobs:
+  main-job:
+    runs-on: ubuntu-latest
+    outputs:
+      sub-job-output: ${{ steps.template-name.outputs.template-name }}
+    steps:
+      - name: Echo
+        run: echo "This is main workflow"
+
+      - name: Set template name
+        id: template-name
+        run: echo "::set-output name=template-name::staging"
+
+      - name: Run Sub Workflow
+        uses: ./.github/workflows/sub.yml

@@ -11,18 +11,14 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: ids
-        id: ids
+      - name: output ids
+        id: output-ids
         run: |
-          ids=$(cat ids.text)
-          echo "ids=$ids" >> $GITHUB_OUTPUT
-
-      - name: display ids
-        id: display-ids
-        run: |
-          ids="${{ steps.ids.outputs.ids }}"
+          ids="id1 id2 id3"
+          output=""
           for id in $ids; do
-            echo "id=$id++++" >> $GITHUB_OUTPUT
+            output+="id=$id++++\n"
           done
+          echo "id=$output" >> $GITHUB_OUTPUT
 
-      - run: echo ${{ steps.display-ids.outputs.id }}
+      - run: echo ${{ steps.output-ids.outputs.id }}

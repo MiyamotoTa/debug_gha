@@ -1,9 +1,15 @@
 name: Sub workflow
 
+on:
+  workflow_run:
+    workflows: ['Main workflow']
+    types:
+      - completed
+
 jobs:
   sub-job:
-    needs: main-job
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Display message
         run: echo "This is a sub workflow"

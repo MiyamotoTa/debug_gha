@@ -14,6 +14,3 @@ jobs:
       - name: Set template name
         id: template-name
         run: echo "::set-output name=template-name::staging"
-
-      - name: Run Sub Workflow
-        uses: ./.github/workflows/sub.yml

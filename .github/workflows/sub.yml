@@ -31,4 +31,4 @@ jobs:
         run: seq 4 15 | sort -nr | tail -n +4 | tr '\n' ',' | sed 's/,$//' >> $GITHUB_OUTPUT
 
       - name: Display versions
-        run: echo "Versions: ${{ steps.get_versions.outputs.versions }}"
+        run: echo "Versions ${{ steps.get_versions.outputs.versions }}"

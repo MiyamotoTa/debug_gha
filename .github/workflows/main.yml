@@ -8,3 +8,16 @@ jobs:
     steps:
       - name: Echo
         run: echo "This is main workflow"
+
+      - name: ids
+        id: ids
+        run: echo "ids=lt-00000000    lt-11111111" >> $GITHUB_OUTPUT
+
+      - name: display ids
+        id: display-ids
+        run: |
+          for id in ${{ steps.ids.outputs.ids }}; do
+            echo "id=$id++++" >> $GITHUB_OUTPUT
+          done
+
+      - run: echo ${{ steps.display-ids.outputs.id }}

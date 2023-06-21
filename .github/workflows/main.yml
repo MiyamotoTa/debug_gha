@@ -13,7 +13,9 @@ jobs:
 
       - name: ids
         id: ids
-        run: cat ids.tsv >> $GITHUB_OUTPUT
+        run: |
+          ids=$(cat ids.tsv)
+          echo "ids=$ids" >> $GITHUB_OUTPUT
 
       - name: display ids
         id: display-ids

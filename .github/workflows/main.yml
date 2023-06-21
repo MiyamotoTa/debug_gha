@@ -11,14 +11,25 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: output ids
-        id: output-ids
+      - name: ids in use
+        id: ids-in-use
         run: |
-          ids="id1 id2 id3"
-          output=""
-          for id in $ids; do
-            output+="id=$id++++\n"
-          done
-          echo "id=$output" >> $GITHUB_OUTPUT
+          ids="id3 id4 id5 id6 id7 id8 id9 id10"
+          echo "id=$ids" >> $GITHUB_OUTPUT
 
-      - run: echo ${{ steps.output-ids.outputs.id }}
+      - name: all ids
+        id: all-ids
+        run: |
+          ids="id1 id2 id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20"
+          echo "id=$ids" >> $GITHUB_OUTPUT
+
+      - name: get IDs to delete
+        id: get-ids-to-delete
+        run: |
+          ids=""
+          for id in ${{ steps.all-ids.outputs.ids }}; do
+            if [[ ! ${{ steps.ids-in-use.outputs.ids }} =~ $id ]]; then
+              ids+="$id "
+            fi
+          done
+          echo "$ids"

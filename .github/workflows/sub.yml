@@ -15,4 +15,4 @@ jobs:
         run: echo "This is a sub workflow"
 
       - name: Display template name
-        run: echo "${{ github.event.workflow_run.head_workflow.name }}"
+        run: echo "${{ github.event.workflow_run }}"

@@ -2,7 +2,7 @@ name: Sub workflow
 
 on:
   workflow_run:
-    workflows: ['Main workflow']
+    workflows: ['Main Workflow']
     types:
       - completed
 
@@ -17,10 +17,10 @@ jobs:
       - name: Determine name
         id: determine_name
         run: |
-          if [ "${{ github.event.workflow_run.name }}" == "Main workflow" ]; then
-            echo "::set-output name=name::Main workflow"
+          if [ "${{ github.event.workflow_run.name }}" == "Main Workflow" ]; then
+            echo "name=Main Workflow" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=name::Sub workflow"
+            echo "name=Sub Workflow" >> $GITHUB_OUTPUT
           fi
 
       - name: Display name

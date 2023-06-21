@@ -23,7 +23,7 @@ jobs:
         run: |
           ids=""
           for id in ${{ steps.all-ids.outputs.ids }}; do
-            if [[ ! "${{ steps.ids-in-use.outputs.ids }}" =~ $id ]]; then
+            if [[ ! " ${{ steps.ids-in-use.outputs.ids }} " =~ $id ]]; then
               ids+="$id "
             fi
           done

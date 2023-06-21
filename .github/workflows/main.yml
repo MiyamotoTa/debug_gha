@@ -9,15 +9,18 @@ jobs:
       - name: Echo
         run: echo "This is main workflow"
 
+      - uses: actions/checkout@v3
+
       - name: ids
         id: ids
-        run: echo "ids=lt-00000000    lt-11111111" >> $GITHUB_OUTPUT
+        run: cat ids.tsv >> $GITHUB_OUTPUT
 
       - name: display ids
         id: display-ids
         run: |
+          ids=${{ steps.ids.outputs.ids }}
           IFS=$'\t'
-          for id in ${{ steps.ids.outputs.ids }}; do
+          for id in $ids; do
             echo "id=$id++++" >> $GITHUB_OUTPUT
           done
 

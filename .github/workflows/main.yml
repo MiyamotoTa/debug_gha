@@ -14,14 +14,13 @@ jobs:
       - name: ids
         id: ids
         run: |
-          ids=$(cat ids.tsv)
+          ids=$(cat ids.text)
           echo "ids=$ids" >> $GITHUB_OUTPUT
 
       - name: display ids
         id: display-ids
         run: |
           ids=${{ steps.ids.outputs.ids }}
-          IFS=$'\t'
           for id in $ids; do
             echo "id=$id++++" >> $GITHUB_OUTPUT
           done

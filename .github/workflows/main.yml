@@ -1,0 +1,30 @@
+name: Main Workflow
+
+on: [push, workflow_dispatch]
+
+jobs:
+  main-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ids in use
+        id: ids-in-use
+        run: |
+          ids="id3 id4 id5 id6 id7 id8 id9 id10"
+          echo "ids=$ids" >> $GITHUB_OUTPUT
+
+      - name: all ids
+        id: all-ids
+        run: |
+          ids="id1 id2 id3 id4 id5 id6 id7 id8 id9 id10 id11 id12 id13 id14 id15 id16 id17 id18 id19 id20"
+          echo "ids=$ids" >> $GITHUB_OUTPUT
+
+      - name: get IDs to delete
+        id: get-ids-to-delete
+        run: |
+          ids=""
+          for id in ${{ steps.all-ids.outputs.ids }}; do
+            if [[ ! " ${{ steps.ids-in-use.outputs.ids }} " =~ " $id " ]]; then
+              ids+="$id "
+            fi
+          done
+          echo "$ids"

@@ -1,0 +1,35 @@
+name: Sub workflow
+
+on:
+  workflow_dispatch:
+  # workflow_run:
+  #   workflows: ['Main Workflow']
+  #   types:
+  #     - completed
+
+jobs:
+  sub-job:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Display message
+        run: echo "This is a sub workflow"
+
+      - name: Determine name
+        id: determine_name
+        run: |
+          if [ "${{ github.event.workflow_run.name }}" == "Main Workflow" ]; then
+            echo "name=Main Workflow" >> $GITHUB_OUTPUT
+          else
+            echo "name=Sub Workflow" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Display name
+        run: echo "This workflow is ${{ steps.determine_name.outputs.name }}"
+
+      - name: Get versions
+        id: get_versions
+        run: seq 4 15 | sort -nr | tail -n +4 | tr '\n' ',' | sed 's/,$//' | echo "versions=$(< /dev/stdin)" >> $GITHUB_OUTPUT
+
+      - name: Display versions
+        run: echo "Versions ${{ steps.get_versions.outputs.versions }}"

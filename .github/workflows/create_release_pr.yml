@@ -4,34 +4,56 @@ on:
   push:
     branches:
       - release/**
+      # - develop
 
 jobs:
   create_release_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
-
-      - name: Setup vars
-        id: vars
+      - name: Check PullRequest Exists
+        id: check_pr
+        env:
+          HEAD_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-          echo "branch_prefix=$(echo ${GITHUB_REF} | cut -d '/' -f 3)" >> $GITHUB_OUTPUT
+          branch_name=${GITHUB_REF#refs/heads/}
+          echo "TITLE=${branch_name}" >> $GITHUB_OUTPUT
+          echo "COUNT=$(gh pr list -S ${branch_name} in:title is:open | wc -l)" >> $GITHUB_OUTPUT
+          head_message=$(echo "${HEAD_MESSAGE}" | sed -n -e 1p)
+          echo "HEAD_MESSAGE=${head_message}" >> $GITHUB_OUTPUT
 
       - name: Create a release PR
-        env:
-          GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
-          GIT_PR_RELEASE_BRANCH_STAGING: ${{ steps.vars.outputs.branch_name }}
-          GIT_PR_RELEASE_TITLE: ${{ steps.vars.outputs.branch_name }}
-          GIT_PR_RELEASE_TEMPLATE: .git_pr_release_template
+        if: steps.check_pr.outputs.COUNT == 0
         run: |
-          gem install -N git-pr-release -v "2.2.0"
-          git-pr-release --no-fetch
+          gh pr create \
+            --base main \
+            --title "${{ steps.check_pr.outputs.TITLE }}" \
+            --body "This PR was created by GitHub Actions.\n\n - ${{ steps.check_pr.outputs.HEAD_MESSAGE }}"
+
+      # - name: Checkout
+      #   uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 0
+
+      # - name: Setup Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     ruby-version: 3.1
+
+      # - name: Setup vars
+      #   id: vars
+      #   run: |
+      #     echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+      #     echo "branch_prefix=$(echo ${GITHUB_REF} | cut -d '/' -f 3)" >> $GITHUB_OUTPUT
+
+      # - name: Create a release PR
+      #   env:
+      #     GIT_PR_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+      #     GIT_PR_RELEASE_BRANCH_STAGING: ${{ steps.vars.outputs.branch_name }}
+      #     GIT_PR_RELEASE_TITLE: ${{ steps.vars.outputs.branch_name }}
+      #     GIT_PR_RELEASE_TEMPLATE: .git_pr_release_template
+      #   run: |
+      #     gem install -N git-pr-release -v "2.2.0"
+      #     git-pr-release --no-fetch

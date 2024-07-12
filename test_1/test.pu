@@ -1,0 +1,15 @@
+@startuml Check if Onboarding already started
+autoactivate on
+
+participant "Client" as client
+participant "Server" as server
+
+== Check if Onboarding already started ==
+
+group Check if Onboarding already started
+client -> server: GET /onboarding/progress
+server --> client: { "not_started" / "not_finished" / "completed" }
+end
+note right: "completed" returned after mic check for all B2B and coaching users.
+
+@enduml
